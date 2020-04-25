@@ -1,0 +1,41 @@
+version: "3.6"
+
+services:
+  
+  balugumi:
+    container_name: balugumi
+    image: httpd:2.4
+    network_mode: host
+    restart: always
+    ports:
+      - 80:80
+    configs:
+      - source: /home/bertus/docker-balugumi/balugumi.com/conf/apache.conf
+      - target: /usr/local/apache2/conf/httpd.conf
+    volumes:
+      - /home/bertus/docker-balugumi/balugumi.com:/usr/local/apache2/htdocs
+
+  balugumi_prod:
+    container_name: balugumi_prod
+    image: httpd:2.4
+    network_mode: host
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    configs:
+      config_apache:
+        - source: /balugumi.com_docker/conf/apache.conf
+        - target: /usr/local/apache2/conf/httpd.conf
+      config_ssl:
+        - source: /balugumi.com_docker/conf/httpd-ssl-balu.conf
+        - target: //usr/local/apache2/conf/extra/httpd-ssl.conf
+      ssl_certfile:
+        - source: /etc/letsencrypt/live/balugumi.com/fullchain.pem
+        - target: /usr/local/apache2/conf/fullchain.pem
+      ssl_cerkey:
+        - source: etc/letsencrypt/live/balugumi.com/privkey.pem
+        - target: /usr/local/apache2/conf/privkey.pem
+    volumes:
+      - /balugumi.com_docker:/usr/local/apache2/htdocs
+      
