@@ -6,7 +6,7 @@ services:
     build: "."
     container_name: balugumi_prod
     network_mode: host
-    restart: on-failure
+    restart: always
     ports:
       - 443:443
     volumes:
